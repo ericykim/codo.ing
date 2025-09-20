@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(() => ({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/apps/codo.ing',
+  cacheDir: '../../node_modules/.vite/apps/web',
   server: {
     port: 4200,
     host: 'localhost',
@@ -27,7 +27,7 @@ export default defineConfig(() => ({
     },
   },
   test: {
-    name: '@codo.ing/codo.ing',
+    name: '@codo.ing/web',
     watch: false,
     globals: true,
     environment: 'jsdom',

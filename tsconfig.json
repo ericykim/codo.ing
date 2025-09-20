@@ -4,10 +4,10 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/codo.ing-e2e"
+      "path": "./apps/e2e"
     },
     {
-      "path": "./apps/codo.ing"
+      "path": "./apps/web"
     }
   ]
 }
