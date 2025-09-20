@@ -1,0 +1,9 @@
+node_modules/
+dist/
+build/
+.nx/
+*.min.js
+test-output/
+coverage/
+*.lock
+bun.lock
