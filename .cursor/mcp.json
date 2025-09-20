@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "nx": {
+      "command": "bunx",
+      "args": ["nx-mcp"],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    }
+  }
+}

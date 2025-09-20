@@ -77,12 +77,36 @@ packages/
 - [ ] SST infrastructure setup
 - [ ] Cross-platform shared components
 
+## MCP (Model Context Protocol) Integration
+
+This workspace includes an Nx MCP server that provides AI tools with deep understanding of your monorepo:
+
+### Features
+- **Project Graph**: Complete workspace structure and dependencies
+- **Task Runner**: Execute Nx commands and view running tasks  
+- **Generators**: Access to Nx generators for code scaffolding
+- **Documentation**: Context-aware Nx documentation lookup
+- **CI Integration**: Access to Nx Cloud pipeline data (when connected)
+
+### Usage with Claude Code
+The MCP server is pre-configured and will automatically start when needed. No additional setup required!
+
+### Manual Usage
+```bash
+# Start MCP server manually (for other AI tools)
+bunx nx-mcp
+
+# Or with custom port for HTTP/SSE transport
+bunx nx-mcp --transport sse --port 9921
+```
+
 ## Technology Stack
 
 - **Monorepo**: Nx with Bun
 - **Web**: React 19, TypeScript, Vite
 - **Code Quality**: Biome (formatting & linting)
-- **Testing**: Vitest, Playwright  
+- **Testing**: Vitest, Playwright
+- **AI Integration**: Nx MCP Server
 - **Collaboration**: Jazz (CRDT-based sync)
 - **Rich Text**: Block Notes
 - **Infrastructure**: SST (AWS)
