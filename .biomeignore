@@ -7,3 +7,4 @@ test-output/
 coverage/
 *.lock
 bun.lock
+routeTree.gen.ts

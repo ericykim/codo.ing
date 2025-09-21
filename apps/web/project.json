@@ -5,22 +5,32 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/vite:build",
-      "outputs": ["{options.outputPath}"],
+      "executor": "nx:run-commands",
       "options": {
-        "outputPath": "dist/apps/web"
-      }
+        "command": "bun vite build",
+        "cwd": "apps/web"
+      },
+      "outputs": ["apps/web/dist"]
     },
     "serve": {
-      "executor": "@nx/vite:dev-server",
+      "executor": "nx:run-commands",
       "options": {
-        "buildTarget": "@codo.ing/web:build",
-        "hmr": true
+        "command": "cd apps/web && bun vite"
       }
     },
     "test": {
-      "executor": "@nx/vite:test",
-      "outputs": ["{projectRoot}/coverage"]
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bun vite test",
+        "cwd": "apps/web"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bun vite preview",
+        "cwd": "apps/web"
+      }
     }
   }
 }

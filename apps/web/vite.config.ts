@@ -1,12 +1,10 @@
-/// <reference types='vitest' />
-
+import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  root: __dirname,
-  cacheDir: '../../node_modules/.vite/apps/web',
-
+  plugins: [TanStackRouterVite(), react()],
+  
   server: {
     port: 4200,
     host: 'localhost',
@@ -16,8 +14,6 @@ export default defineConfig({
     port: 4300,
     host: 'localhost',
   },
-
-  plugins: [react()],
 
   build: {
     outDir: './dist',

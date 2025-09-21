@@ -4,7 +4,7 @@ A cross-platform collaborative note-taking application built with Jazz for real-
 
 ## Architecture
 
-- **Web**: React 19 app with "Hello World" foundation
+- **Web**: React 19 app with HeroUI design system, Clerk authentication, TanStack Router
 - **Desktop**: Electron app (✅ **implemented**) - loads web app as renderer
 - **Mobile**: React Native with Expo (planned) - will use Tentap Editor
 - **Sync**: Jazz for real-time collaboration and offline-first data sync (planned)
@@ -99,18 +99,20 @@ llm/
 **✅ Completed:**
 - [x] Initial Nx monorepo setup with Bun
 - [x] Biome integration for code quality (replaced Prettier/ESLint)
-- [x] Clean "Hello World" foundation apps
+- [x] React 19 foundation with TanStack Router for type-safe routing
+- [x] HeroUI design system with Tailwind CSS integration
+- [x] Clerk authentication (Sign In/Sign Up/User Management)
 - [x] Electron desktop app implementation
 - [x] MCP server integration for AI development
 - [x] TypeScript configuration across all projects
+- [x] Cross-platform development workflow
 
 **🚧 Next Steps:**
 - [ ] Add Jazz for collaboration and sync
-- [ ] Implement Block Notes editor (web)
+- [ ] Implement Block Notes rich text editor (web)
 - [ ] Add React Native mobile app with Expo
 - [ ] Implement Tentap Editor (mobile)
 - [ ] Create shared packages for business logic
-- [ ] Cross-platform UI component library
 
 **📋 Future:**
 - [ ] SST infrastructure setup
@@ -145,12 +147,14 @@ bunx nx-mcp --transport sse --port 9921
 
 **Core:**
 - **Monorepo**: Nx 21 with Bun package manager
-- **Web**: React 19, TypeScript, Vite
+- **Web**: React 19, TypeScript, Vite, TanStack Router
+- **UI**: HeroUI design system with Tailwind CSS
+- **Auth**: Clerk (authentication & user management)
 - **Desktop**: Electron with nx-electron
 - **Mobile**: React Native with Expo (planned)
 
 **Development:**
-- **Code Quality**: Biome (formatting & linting)
+- **Code Quality**: Biome (formatting & linting) - NO ESLint/Prettier
 - **Testing**: Vitest (unit), Playwright (E2E)
 - **AI Integration**: Nx MCP Server for Claude Code
 
