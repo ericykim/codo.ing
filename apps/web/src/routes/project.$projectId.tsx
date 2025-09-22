@@ -1,8 +1,7 @@
 import { Button, Checkbox, Input, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@heroui/react';
-import { useAuth } from '@clerk/clerk-react';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Group } from 'jazz-tools';
-import { useCoState } from 'jazz-tools/react';
+import { useCoState, useIsAuthenticated } from 'jazz-tools/react';
 import { useCallback, useState } from 'react';
 import { InviteButton } from '../components/InviteButton';
 import { Task, TodoProject } from '../schema';
@@ -14,7 +13,7 @@ export const Route = createFileRoute('/project/$projectId')({
 function ProjectView() {
   const { projectId } = Route.useParams();
   const [newTaskText, setNewTaskText] = useState('');
-  const { isSignedIn } = useAuth();
+  const isAuthenticated = useIsAuthenticated();
   
   const project = useCoState(TodoProject, projectId, {
     resolve: {
@@ -87,7 +86,7 @@ function ProjectView() {
         <InviteButton value={project} valueHint="project" />
       </div>
 
-      {isSignedIn && (
+      {isAuthenticated && (
         <form onSubmit={handleSubmit} className="flex gap-2">
           <Input
             placeholder="Add new task..."
@@ -105,7 +104,7 @@ function ProjectView() {
         </form>
       )}
 
-      {!isSignedIn && (
+      {!isAuthenticated && (
         <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
           <p className="text-yellow-800">
             You're viewing this project as a guest. Sign in to add tasks and collaborate.
@@ -133,7 +132,7 @@ function ProjectView() {
                     <Checkbox
                       isSelected={task?.done || false}
                       onValueChange={() => toggleTask(task)}
-                      isDisabled={!isSignedIn}
+                      isDisabled={!isAuthenticated}
                     />
                   </TableCell>
                   <TableCell>
@@ -147,7 +146,7 @@ function ProjectView() {
                     </span>
                   </TableCell>
                   <TableCell>
-                    {isSignedIn ? (
+                    {isAuthenticated ? (
                       <Button
                         size="sm"
                         color="danger"

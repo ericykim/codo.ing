@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import { format } from 'node:url';
-import { BrowserWindow, screen, shell } from 'electron';
+import { BrowserWindow, screen, shell, app } from 'electron';
 import { environment } from '../environments/environment';
 import { rendererAppName, rendererAppPort } from './constants';
 
@@ -40,12 +40,35 @@ export default class App {
   }
 
   private static onReady() {
+    // Handle single instance for deep links
+    const gotTheLock = app.requestSingleInstanceLock();
+    if (!gotTheLock) {
+      app.quit();
+      return;
+    }
+
+    // Register deep link protocol
+    if (process.defaultApp) {
+      if (process.argv.length >= 2) {
+        app.setAsDefaultProtocolClient('codo-ing', process.execPath, [join(__dirname, '..')]);
+      }
+    } else {
+      app.setAsDefaultProtocolClient('codo-ing');
+    }
+
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
     // Some APIs can only be used after this event occurs.
     if (rendererAppName) {
       App.initMainWindow();
-      App.loadMainWindow();
+      
+      // Check for initial deep link from command line arguments
+      const deepLinkUrl = process.argv.find(arg => arg.startsWith('codo-ing://'));
+      if (deepLinkUrl) {
+        App.handleDeepLink(deepLinkUrl);
+      } else {
+        App.loadMainWindow();
+      }
     }
   }
 
@@ -76,6 +99,11 @@ export default class App {
     App.mainWindow.setMenu(null);
     App.mainWindow.center();
 
+    // Open dev tools in development
+    if (!App.application.isPackaged) {
+      App.mainWindow.webContents.openDevTools();
+    }
+
     // if main window is ready to show, close the splash window and show the main window
     App.mainWindow.once('ready-to-show', () => {
       App.mainWindow?.show();
@@ -86,6 +114,25 @@ export default class App {
 
     // Emitted when the window is closed.
     App.mainWindow.on('closed', App.onClose);
+  }
+
+  private static handleDeepLink(url: string) {
+    if (App.mainWindow) {
+      if (App.mainWindow.isMinimized()) App.mainWindow.restore();
+      App.mainWindow.focus();
+      
+      // Extract the path from the protocol URL
+      const urlPath = url.replace('codo-ing://', '');
+      
+      if (App.application.isPackaged) {
+        const webUrl = `file://${join(__dirname, '..', rendererAppName, 'index.html')}#/${urlPath}`;
+        App.mainWindow.loadURL(webUrl);
+      } else {
+        // In development, load the URL with the path
+        const devUrl = `http://localhost:${rendererAppPort}/${urlPath}`;
+        App.mainWindow.loadURL(devUrl);
+      }
+    }
   }
 
   private static loadMainWindow() {
@@ -115,5 +162,19 @@ export default class App {
     App.application.on('window-all-closed', App.onWindowAllClosed); // Quit when all windows are closed.
     App.application.on('ready', App.onReady); // App is ready to load data
     App.application.on('activate', App.onActivate); // App is activated
+    
+    // Handle deep links
+    App.application.on('open-url', (event, url) => {
+      event.preventDefault();
+      App.handleDeepLink(url);
+    });
+
+    // Handle deep links on Windows/Linux
+    App.application.on('second-instance', (event, commandLine, workingDirectory) => {
+      const url = commandLine.find(arg => arg.startsWith('codo-ing://'));
+      if (url) {
+        App.handleDeepLink(url);
+      }
+    });
   }
 }

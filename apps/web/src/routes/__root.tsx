@@ -1,10 +1,14 @@
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/clerk-react';
+import { SignInButton, SignUpButton, UserButton } from '@clerk/clerk-react';
 import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react';
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import { useAccount, useIsAuthenticated } from 'jazz-tools/react';
 
-export const Route = createRootRoute({
-  component: () => (
+function RootComponent() {
+  const isAuthenticated = useIsAuthenticated();
+  const { logOut } = useAccount();
+
+  return (
     <>
       <Navbar>
         <NavbarBrand>
@@ -23,27 +27,30 @@ export const Route = createRootRoute({
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="end">
-          <SignedOut>
+          {!isAuthenticated ? (
+            <>
+              <NavbarItem>
+                <SignInButton>
+                  <Button variant="light">
+                    Sign In
+                  </Button>
+                </SignInButton>
+              </NavbarItem>
+              <NavbarItem>
+                <SignUpButton>
+                  <Button color="primary">
+                    Sign Up
+                  </Button>
+                </SignUpButton>
+              </NavbarItem>
+            </>
+          ) : (
             <NavbarItem>
-              <SignInButton>
-                <Button variant="light">
-                  Sign In
-                </Button>
-              </SignInButton>
+              <Button variant="light" onPress={logOut}>
+                Sign Out
+              </Button>
             </NavbarItem>
-            <NavbarItem>
-              <SignUpButton>
-                <Button color="primary">
-                  Sign Up
-                </Button>
-              </SignUpButton>
-            </NavbarItem>
-          </SignedOut>
-          <SignedIn>
-            <NavbarItem>
-              <UserButton />
-            </NavbarItem>
-          </SignedIn>
+          )}
         </NavbarContent>
       </Navbar>
       <main className="container mx-auto px-4 py-8">
@@ -51,5 +58,9 @@ export const Route = createRootRoute({
       </main>
       <TanStackRouterDevtools />
     </>
-  ),
+  );
+}
+
+export const Route = createRootRoute({
+  component: RootComponent,
 });

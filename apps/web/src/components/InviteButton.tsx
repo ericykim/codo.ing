@@ -10,6 +10,7 @@ import {
 import { CoValue, createInviteLink } from "jazz-tools";
 import { useAccount } from "jazz-tools/react";
 import { useState } from "react";
+import { isElectron } from "../utils/deeplink";
 
 interface InviteButtonProps {
   value: CoValue;
@@ -36,7 +37,9 @@ export function InviteButton({ value, valueHint }: InviteButtonProps) {
     }
 
     if (inviteLink) {
-      await navigator.clipboard.writeText(inviteLink);
+      // Convert to deep link format for Electron
+      const finalLink = isElectron ? inviteLink.replace('http://localhost:4200/', 'codo-ing://') : inviteLink;
+      await navigator.clipboard.writeText(finalLink);
       // Could add a toast notification here
     }
   };
@@ -65,7 +68,7 @@ export function InviteButton({ value, valueHint }: InviteButtonProps) {
             </p>
             {existingInviteLink ? (
               <div className="bg-gray-100 p-3 rounded-lg break-all text-sm">
-                {existingInviteLink}
+                {isElectron ? existingInviteLink.replace('http://localhost:4200/', 'codo-ing://') : existingInviteLink}
               </div>
             ) : (
               <p className="text-gray-500">

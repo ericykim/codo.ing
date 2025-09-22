@@ -1,7 +1,7 @@
 import { Button, Card, CardBody, CardHeader, Spinner } from '@heroui/react';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { useAcceptInvite } from 'jazz-tools/react';
-import { useAuth } from '@clerk/clerk-react';
+import { useAcceptInvite, useIsAuthenticated } from 'jazz-tools/react';
+import { SignInButton } from '@clerk/clerk-react';
 import { useEffect } from 'react';
 
 export const Route = createFileRoute('/invite/$')({
@@ -10,7 +10,7 @@ export const Route = createFileRoute('/invite/$')({
 
 function InvitePage() {
   const inviteCode = Route.useParams()['_splat'];
-  const { isSignedIn, signIn } = useAuth();
+  const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   
   const { state, acceptInvite, project } = useAcceptInvite({
@@ -28,13 +28,6 @@ function InvitePage() {
     acceptInvite();
   };
 
-  const handleSignInAndAccept = () => {
-    if (signIn) {
-      signIn.attemptFirstFactor({
-        strategy: 'oauth_google',
-      });
-    }
-  };
 
   if (state === 'loading') {
     return (
@@ -95,22 +88,23 @@ function InvitePage() {
               className="w-full"
               onPress={handleAcceptInvite}
             >
-              {isSignedIn ? 'Accept Invite' : 'View as Guest'}
+              {isAuthenticated ? 'Accept Invite' : 'View as Guest'}
             </Button>
             
-            {!isSignedIn && (
-              <Button 
-                variant="bordered" 
-                className="w-full"
-                onPress={handleSignInAndAccept}
-              >
-                Sign In & Accept Invite
-              </Button>
+            {!isAuthenticated && (
+              <SignInButton>
+                <Button 
+                  variant="bordered" 
+                  className="w-full"
+                >
+                  Sign In & Accept Invite
+                </Button>
+              </SignInButton>
             )}
           </div>
 
           <p className="text-sm text-gray-500">
-            {isSignedIn 
+            {isAuthenticated 
               ? 'You will be added as a collaborator to this project.' 
               : 'You can view the project anonymously or sign in to become a full collaborator.'
             }

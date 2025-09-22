@@ -1,7 +1,6 @@
-import { Link } from '@heroui/react';
-import { useAuth } from '@clerk/clerk-react';
-import { createFileRoute } from '@tanstack/react-router';
-import { useAccount } from 'jazz-tools/react';
+import { Link as HeroLink } from '@heroui/react';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { useAccount, useIsAuthenticated } from 'jazz-tools/react';
 import { TodoAccount } from '../schema';
 import { NewProjectForm } from '../components/NewProjectForm';
 
@@ -10,7 +9,7 @@ export const Route = createFileRoute('/')({
 });
 
 function Index() {
-  const { isSignedIn } = useAuth();
+  const isAuthenticated = useIsAuthenticated();
   const { me } = useAccount(TodoAccount, {
     resolve: { root: { projects: { $each: { $onError: null } } } },
   });
@@ -27,7 +26,7 @@ function Index() {
         </div>
       </div>
 
-      {isSignedIn && <NewProjectForm />}
+      {isAuthenticated && <NewProjectForm />}
 
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Your Projects</h2>
@@ -40,8 +39,12 @@ function Index() {
                   {project?.tasks?.length || 0} tasks
                 </p>
                 <Link 
-                  href={`/project/${project?.$jazz.id}`}
+                  to="/project/$projectId"
+                  params={{ projectId: project?.$jazz.id || '' }}
                   className="text-primary hover:underline"
+                  onClick={() => {
+                    console.log('Clicked project link:', project?.$jazz.id);
+                  }}
                 >
                   Open Project →
                 </Link>

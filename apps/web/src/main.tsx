@@ -1,8 +1,8 @@
-import { ClerkProvider } from "@clerk/clerk-react";
+import { ClerkProvider, useClerk } from "@clerk/clerk-react";
 import { HeroUIProvider } from "@heroui/react";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { JazzInspector } from "jazz-tools/inspector";
-import { JazzReactProvider } from "jazz-tools/react";
+import { JazzReactProviderWithClerk } from "jazz-tools/react";
 import { StrictMode } from "react";
 import * as ReactDOM from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
@@ -14,12 +14,28 @@ if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Clerk Publishable Key");
 }
 
-const router = createRouter({ routeTree });
+const router = createRouter({ 
+  routeTree
+});
 
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
   }
+}
+
+function JazzProvider({ children }: { children: React.ReactNode }) {
+  const clerk = useClerk();
+  
+  return (
+    <JazzReactProviderWithClerk
+      clerk={clerk}
+      AccountSchema={TodoAccount}
+      sync={{ peer: "ws://localhost:4201" }}
+    >
+      {children}
+    </JazzReactProviderWithClerk>
+  );
 }
 
 const root = ReactDOM.createRoot(
@@ -30,14 +46,10 @@ root.render(
   <StrictMode>
     <HeroUIProvider>
       <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-        <JazzReactProvider
-          AccountSchema={TodoAccount}
-          sync={{ peer: "ws://localhost:4200" }}
-          auth="guest"
-        >
+        <JazzProvider>
           <RouterProvider router={router} />
           <JazzInspector />
-        </JazzReactProvider>
+        </JazzProvider>
       </ClerkProvider>
     </HeroUIProvider>
   </StrictMode>,
