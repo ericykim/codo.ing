@@ -25,14 +25,18 @@ export const Route = createRootRoute({
         <NavbarContent justify="end">
           <SignedOut>
             <NavbarItem>
-              <Button as={SignInButton} variant="light">
-                Sign In
-              </Button>
+              <SignInButton>
+                <Button variant="light">
+                  Sign In
+                </Button>
+              </SignInButton>
             </NavbarItem>
             <NavbarItem>
-              <Button as={SignUpButton} color="primary">
-                Sign Up
-              </Button>
+              <SignUpButton>
+                <Button color="primary">
+                  Sign Up
+                </Button>
+              </SignUpButton>
             </NavbarItem>
           </SignedOut>
           <SignedIn>

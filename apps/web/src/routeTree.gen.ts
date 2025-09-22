@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProjectProjectIdRouteImport } from './routes/project.$projectId'
+import { Route as InviteSplatRouteImport } from './routes/invite.$'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
@@ -22,31 +24,49 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectProjectIdRoute = ProjectProjectIdRouteImport.update({
+  id: '/project/$projectId',
+  path: '/project/$projectId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InviteSplatRoute = InviteSplatRouteImport.update({
+  id: '/invite/$',
+  path: '/invite/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/invite/$': typeof InviteSplatRoute
+  '/project/$projectId': typeof ProjectProjectIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/invite/$': typeof InviteSplatRoute
+  '/project/$projectId': typeof ProjectProjectIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/invite/$': typeof InviteSplatRoute
+  '/project/$projectId': typeof ProjectProjectIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths: '/' | '/about' | '/invite/$' | '/project/$projectId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to: '/' | '/about' | '/invite/$' | '/project/$projectId'
+  id: '__root__' | '/' | '/about' | '/invite/$' | '/project/$projectId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  InviteSplatRoute: typeof InviteSplatRoute
+  ProjectProjectIdRoute: typeof ProjectProjectIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +85,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/project/$projectId': {
+      id: '/project/$projectId'
+      path: '/project/$projectId'
+      fullPath: '/project/$projectId'
+      preLoaderRoute: typeof ProjectProjectIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invite/$': {
+      id: '/invite/$'
+      path: '/invite/$'
+      fullPath: '/invite/$'
+      preLoaderRoute: typeof InviteSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  InviteSplatRoute: InviteSplatRoute,
+  ProjectProjectIdRoute: ProjectProjectIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
