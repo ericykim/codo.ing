@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import { format } from 'node:url';
-import { BrowserWindow, screen, shell, app } from 'electron';
+import { app, BrowserWindow, screen, shell } from 'electron';
 import { environment } from '../environments/environment';
 import { rendererAppName, rendererAppPort } from './constants';
 
@@ -61,9 +61,9 @@ export default class App {
     // Some APIs can only be used after this event occurs.
     if (rendererAppName) {
       App.initMainWindow();
-      
+
       // Check for initial deep link from command line arguments
-      const deepLinkUrl = process.argv.find(arg => arg.startsWith('codo-ing://'));
+      const deepLinkUrl = process.argv.find((arg) => arg.startsWith('codo-ing://'));
       if (deepLinkUrl) {
         App.handleDeepLink(deepLinkUrl);
       } else {
@@ -120,10 +120,10 @@ export default class App {
     if (App.mainWindow) {
       if (App.mainWindow.isMinimized()) App.mainWindow.restore();
       App.mainWindow.focus();
-      
+
       // Extract the path from the protocol URL
       const urlPath = url.replace('codo-ing://', '');
-      
+
       if (App.application.isPackaged) {
         const webUrl = `file://${join(__dirname, '..', rendererAppName, 'index.html')}#/${urlPath}`;
         App.mainWindow.loadURL(webUrl);
@@ -162,7 +162,7 @@ export default class App {
     App.application.on('window-all-closed', App.onWindowAllClosed); // Quit when all windows are closed.
     App.application.on('ready', App.onReady); // App is ready to load data
     App.application.on('activate', App.onActivate); // App is activated
-    
+
     // Handle deep links
     App.application.on('open-url', (event, url) => {
       event.preventDefault();
@@ -171,7 +171,7 @@ export default class App {
 
     // Handle deep links on Windows/Linux
     App.application.on('second-instance', (event, commandLine, workingDirectory) => {
-      const url = commandLine.find(arg => arg.startsWith('codo-ing://'));
+      const url = commandLine.find((arg) => arg.startsWith('codo-ing://'));
       if (url) {
         App.handleDeepLink(url);
       }

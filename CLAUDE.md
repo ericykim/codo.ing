@@ -9,7 +9,6 @@ When creating UI components, prioritize HeroUI components first:
 
 ## Development Commands
 
-- Jazz sync server: `bun run sync`
 - Web development server: `bun run web`
 - Electron desktop app: `bun run electron`
 - Build: `bun nx build web`
@@ -18,14 +17,8 @@ When creating UI components, prioritize HeroUI components first:
 ## Development Workflow
 
 For full development, run these in separate terminals:
-1. `bun run sync` - Start Jazz collaborative database (uses Node.js to avoid Bun SQLite issues)
-2. `bun run web` - Start web app development server
-3. `bun run electron` - Start Electron desktop wrapper (optional)
-
-## Known Issues
-
-- Jazz sync server requires Node.js due to native SQLite module compatibility with Bun
-- The `bun run sync` command automatically uses Node.js internally
+1. `bun run web` - Start web app development server
+2. `bun run electron` - Start Electron desktop wrapper (optional)
 
 ## Tailwind CSS + HeroUI Setup
 
@@ -42,5 +35,5 @@ For full development, run these in separate terminals:
 - Clerk authentication
 - Electron desktop wrapper
 - Biome for code formatting and linting (no ESLint)
-- Jazz collaborative database with local sync server
-- Zod schema validation integrated with Jazz CoValues
+- Ready for your preferred database solution (Electric-SQL, Supabase, etc.)
+- Zod schema validation ready for integration

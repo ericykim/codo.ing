@@ -1,7 +1,7 @@
 # Codo.ing Project Context
 
 ## Project Overview
-This is a cross-platform collaborative note-taking application built with Jazz (CRDT-based sync) and Block Notes (rich text editor).
+This is a cross-platform collaborative note-taking application ready for your preferred database and collaboration solution.
 
 ## Technology Stack
 - **Monorepo**: Nx with Bun package manager
@@ -11,7 +11,7 @@ This is a cross-platform collaborative note-taking application built with Jazz (
 - **Code Quality**: Biome (formatting & linting) - NO Prettier or ESLint
 - **Testing**: Vitest, Playwright
 - **Desktop**: Electron wrapper ✅ IMPLEMENTED
-- **Collaboration**: Jazz (CRDT-based sync) - planned
+- **Database**: Ready for your preferred solution (Electric-SQL, Supabase, etc.)
 - **Rich Text**: Block Notes - planned
 - **Infrastructure**: SST (AWS) - planned
 
@@ -62,13 +62,13 @@ apps/
 packages/
 ├── shared/        # Shared business logic (planned)
 ├── ui/            # Design system (planned)
-└── jazz-schemas/  # Jazz data models (planned)
+└── db-schemas/    # Database schemas (planned)
 ```
 
-## Jazz Integration
-- Use the `llms-full.txt` file in the project root to learn Jazz API and patterns
-- Jazz is our chosen CRDT-based collaboration and sync solution
-- Focus on offline-first, real-time collaboration capabilities
+## Database Integration
+- Ready for your preferred database solution
+- Consider Electric-SQL for local-first sync, Supabase for managed backend, or your choice
+- Architecture supports both traditional REST APIs and real-time sync solutions
 
 ## Current Implementation Status
 ✅ **Completed:**
@@ -83,7 +83,7 @@ packages/
 - [x] MCP server integration for AI development
 
 ## Next Steps in Roadmap
-- [ ] Add Jazz for collaboration and sync
+- [ ] Choose and integrate database solution
 - [ ] Implement Block Notes rich text editor
 - [ ] Add React Native mobile app with Expo
 - [ ] Create shared business logic packages

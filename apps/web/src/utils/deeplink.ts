@@ -1,5 +1,6 @@
 // Check if running in Electron
-export const isElectron = typeof window !== 'undefined' && window.navigator.userAgent.includes('Electron');
+export const isElectron =
+  typeof window !== 'undefined' && window.navigator.userAgent.includes('Electron');
 
 // Generate appropriate URL for the current environment
 export function createProjectUrl(projectId: string): string {

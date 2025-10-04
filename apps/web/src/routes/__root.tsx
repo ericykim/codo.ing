@@ -1,12 +1,11 @@
-import { SignInButton, SignUpButton, UserButton } from '@clerk/clerk-react';
+import { SignInButton, SignUpButton, useClerk, useUser } from '@clerk/clerk-react';
 import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react';
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
-import { useAccount, useIsAuthenticated } from 'jazz-tools/react';
 
 function RootComponent() {
-  const isAuthenticated = useIsAuthenticated();
-  const { logOut } = useAccount();
+  const { isSignedIn } = useUser();
+  const { signOut } = useClerk();
 
   return (
     <>
@@ -27,26 +26,22 @@ function RootComponent() {
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="end">
-          {!isAuthenticated ? (
+          {!isSignedIn ? (
             <>
               <NavbarItem>
                 <SignInButton>
-                  <Button variant="light">
-                    Sign In
-                  </Button>
+                  <Button variant="light">Sign In</Button>
                 </SignInButton>
               </NavbarItem>
               <NavbarItem>
                 <SignUpButton>
-                  <Button color="primary">
-                    Sign Up
-                  </Button>
+                  <Button color="primary">Sign Up</Button>
                 </SignUpButton>
               </NavbarItem>
             </>
           ) : (
             <NavbarItem>
-              <Button variant="light" onPress={logOut}>
+              <Button variant="light" onPress={() => signOut()}>
                 Sign Out
               </Button>
             </NavbarItem>

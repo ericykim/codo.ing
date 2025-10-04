@@ -1,13 +1,13 @@
 # Codo.ing
 
-A cross-platform collaborative note-taking application built with Jazz for real-time collaboration and rich text editing.
+A cross-platform collaborative note-taking application ready for your preferred database and collaboration solution.
 
 ## Architecture
 
 - **Web**: React 19 app with HeroUI design system, Clerk authentication, TanStack Router
 - **Desktop**: Electron app (✅ **implemented**) - loads web app as renderer
 - **Mobile**: React Native with Expo (planned) - will use Tentap Editor
-- **Sync**: Jazz for real-time collaboration and offline-first data sync (planned)
+- **Backend**: Ready for your preferred solution (Electric-SQL, Supabase, etc.)
 - **Infrastructure**: SST for AWS deployment (planned)
 
 ## Quick Start
@@ -108,8 +108,8 @@ llm/
 - [x] Cross-platform development workflow
 
 **🚧 Next Steps:**
-- [ ] Add Jazz for collaboration and sync
-- [ ] Implement Block Notes rich text editor (web)
+- [ ] Choose and integrate database solution (Electric-SQL, Supabase, etc.)
+- [ ] Implement rich text editor (Block Notes for web)
 - [ ] Add React Native mobile app with Expo
 - [ ] Implement Tentap Editor (mobile)
 - [ ] Create shared packages for business logic
@@ -159,7 +159,7 @@ bunx nx-mcp --transport sse --port 9921
 - **AI Integration**: Nx MCP Server for Claude Code
 
 **Planned:**
-- **Collaboration**: Jazz (CRDT-based sync with offline support)
+- **Database**: Your choice (Electric-SQL, Supabase, Firebase, etc.)
 - **Rich Text**: Block Notes (web), Tentap Editor (mobile)
 - **Infrastructure**: SST (AWS deployment)
 
@@ -173,7 +173,7 @@ bunx nx-mcp --transport sse --port 9921
 - Extensible plugin system
 - ProseMirror foundation (same as Block Notes)
 
-### Example Integration
+### Example Integration (Ready for Implementation)
 
 ```typescript
 // packages/editor-shared/types.ts
@@ -214,20 +214,12 @@ export const MobileEditor = ({ content, onChange }) => {
   return <RichText editor={editor} />;
 };
 
-// packages/jazz-schemas/Note.ts
-import { CoMap, co } from 'jazz-tools';
-import type { UniversalEditorContent } from '@codo.ing/editor-shared';
-
-export class Note extends CoMap {
-  title = co.string;
-  content = co.json<UniversalEditorContent>();
-  updatedAt = co.number;
-  createdBy = co.ref(User);
-}
+// Ready for your database schema
+// Electric-SQL, Drizzle, Prisma, or your preferred solution
 ```
 
 This architecture ensures:
 - **Unified data model** across all platforms
-- **Jazz sync compatibility** with the same schemas
+- **Database-agnostic design** ready for any backend
 - **Platform-optimized editors** while maintaining consistency
-- **Gradual migration path** from simple to rich text editing
+- **Clean separation** between UI and data layers
