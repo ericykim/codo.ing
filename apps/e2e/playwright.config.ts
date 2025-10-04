@@ -24,7 +24,7 @@ export default defineConfig({
   },
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'bun nx run @codo.ing/web:preview',
+    command: 'bun nx run web:preview',
     url: 'http://localhost:4300',
     reuseExistingServer: true,
     cwd: workspaceRoot,

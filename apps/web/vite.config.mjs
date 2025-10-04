@@ -33,7 +33,7 @@ export default defineConfig({
   },
 
   test: {
-    name: "@codo.ing/web",
+    name: "web",
     watch: false,
     globals: true,
     environment: "jsdom",
