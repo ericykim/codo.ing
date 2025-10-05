@@ -123,6 +123,6 @@ function MyComponent() {
 3. Connection string: Uses `DATABASE_URL` environment variable
 
 ### Database Management
-- Initialize/modify schema: Add SQL files to `database/init/`
+- Initialize/modify schema: Add SQL files to `postgres/init/`
 - Access database: `docker compose exec postgres psql -U $POSTGRES_USER -d $POSTGRES_DB`
 - Stop database: `docker compose down postgres`
