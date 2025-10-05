@@ -1,1 +1,3 @@
-export * from './models';
+import * as schema from "./models";
+
+export { schema };

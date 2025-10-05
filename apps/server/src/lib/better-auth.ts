@@ -1,11 +1,13 @@
-import { db } from "@codoing/schema/db";
+import { db, schema } from "@codoing/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { env } from "./env";
+import { v4 as uuidv4 } from "uuid";
+import { env } from "../env";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
+    schema: schema,
     usePlural: true,
   }),
 
@@ -41,7 +43,9 @@ export const auth = betterAuth({
 
   // Advanced configuration
   advanced: {
-    generateId: () => crypto.randomUUID(), // Use standard UUID v4
+    database: {
+      generateId: () => uuidv4(), // Use uuid package v4
+    },
   },
 
   // CORS configuration for web client

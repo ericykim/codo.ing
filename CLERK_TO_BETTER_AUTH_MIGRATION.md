@@ -1,11 +1,13 @@
 # Clerk to Better-auth Migration Plan
 
 ## Overview
+
 Migrate from Clerk authentication to Better-auth for email/password + Google SSO authentication with proper authenticated/unauthenticated route handling.
 
 ## Migration Todo List
 
 ### 1. Remove Clerk Integration (Clean Slate)
+
 - [ ] Backup existing Clerk user data (if any exists)
 - [ ] Remove Clerk dependencies: `bun remove @clerk/clerk-react @clerk/nextjs`
 - [ ] Delete all Clerk configuration files and components
@@ -17,6 +19,7 @@ Migrate from Clerk authentication to Better-auth for email/password + Google SSO
 - [ ] Create temporary "no auth" state (allow access to all routes)
 
 ### 2. Database Schema Setup
+
 - [ ] Create migration script for Better-auth tables
 - [ ] Add Better-auth schema to `postgres/init/` directory
 - [ ] Update database with required tables (users, sessions, accounts, verification_tokens)
@@ -24,8 +27,9 @@ Migrate from Clerk authentication to Better-auth for email/password + Google SSO
 - [ ] Verify tables are created correctly
 
 ### 3. Better-auth Server Configuration
+
 - [ ] Install Better-auth dependencies: `bun add better-auth`
-- [ ] Install Google OAuth plugin: `bun add @better-auth/oauth-providers` 
+- [ ] Install Google OAuth plugin: `bun add @better-auth/oauth-providers`
 - [ ] Create `apps/server/src/lib/auth.ts` - Better-auth server config
 - [ ] Configure email/password + Google provider
 - [ ] Add Better-auth middleware to Fastify server
@@ -33,7 +37,8 @@ Migrate from Clerk authentication to Better-auth for email/password + Google SSO
 - [ ] Set up session management and validation
 - [ ] Update server environment validation for Better-auth
 
-### 4. Better-auth Client Setup  
+### 4. Better-auth Client Setup
+
 - [ ] Create `apps/web/src/lib/auth-client.ts` - Better-auth client
 - [ ] Install client dependencies if needed
 - [ ] Configure client to connect to server auth endpoints
@@ -41,6 +46,7 @@ Migrate from Clerk authentication to Better-auth for email/password + Google SSO
 - [ ] Test basic client-server authentication connection
 
 ### 5. Authentication UI Components
+
 - [ ] Create sign-in page with HeroUI (`apps/web/src/routes/signin.tsx`)
 - [ ] Create sign-up page with HeroUI (`apps/web/src/routes/signup.tsx`)
 - [ ] Add email/password forms with proper validation
@@ -50,6 +56,7 @@ Migrate from Clerk authentication to Better-auth for email/password + Google SSO
 - [ ] Test form submissions and user feedback
 
 ### 6. Route Protection with TanStack Router
+
 - [ ] Create authentication guard function for route protection
 - [ ] Configure unauthenticated routes (signin, signup)
 - [ ] Configure authenticated routes (index, dashboard, etc.)
@@ -58,6 +65,7 @@ Migrate from Clerk authentication to Better-auth for email/password + Google SSO
 - [ ] Test route access and redirects
 
 ### 7. Server-Side Route Protection
+
 - [ ] Create authenticated/unauthenticated tRPC procedures
 - [ ] Move all existing tRPC routes to authenticated procedures
 - [ ] Add session validation middleware
@@ -65,6 +73,7 @@ Migrate from Clerk authentication to Better-auth for email/password + Google SSO
 - [ ] Ensure proper error handling for unauthenticated requests
 
 ### 8. Replace Authentication Logic
+
 - [ ] Replace any remaining Clerk hooks with Better-auth equivalents
 - [ ] Update user data handling to match Better-auth schema
 - [ ] Modify user profile/settings functionality
@@ -72,6 +81,7 @@ Migrate from Clerk authentication to Better-auth for email/password + Google SSO
 - [ ] Test user session management
 
 ### 9. Environment & Configuration
+
 - [ ] Add Better-auth environment variables to `.env.example`
 - [ ] Set up Google OAuth app credentials
 - [ ] Configure session secrets and encryption keys
@@ -79,6 +89,7 @@ Migrate from Clerk authentication to Better-auth for email/password + Google SSO
 - [ ] Test environment configuration
 
 ### 10. Testing & Validation
+
 - [ ] Test complete email/password authentication flow
 - [ ] Test Google SSO integration end-to-end
 - [ ] Verify all route protection works correctly
@@ -89,6 +100,7 @@ Migrate from Clerk authentication to Better-auth for email/password + Google SSO
 - [ ] Test error scenarios and edge cases
 
 ### 11. Documentation & Cleanup
+
 - [ ] Update CLAUDE.md with Better-auth instructions
 - [ ] Document new authentication flow and API endpoints
 - [ ] Add troubleshooting guide for auth issues
@@ -98,6 +110,7 @@ Migrate from Clerk authentication to Better-auth for email/password + Google SSO
 ## Key Technical Details
 
 ### Authentication Flow
+
 1. **Unauthenticated Users**: Redirect to `/signin` page
 2. **Sign In Options**: Email/password form + Google SSO button
 3. **Successful Auth**: Redirect to `/` (index route)
@@ -105,14 +118,16 @@ Migrate from Clerk authentication to Better-auth for email/password + Google SSO
 5. **Route Guards**: TanStack Router `beforeLoad` checks authentication status
 
 ### Route Structure
+
 ```
 /signin     - Sign in page (unauthenticated only)
-/signup     - Sign up page (unauthenticated only) 
+/signup     - Sign up page (unauthenticated only)
 /           - Index route (authenticated only)
 /dashboard  - Protected routes (authenticated only)
 ```
 
 ### Server API Structure
+
 ```
 /api/auth/signin    - Email/password + Google signin
 /api/auth/signup    - Email/password signup
@@ -122,6 +137,7 @@ Migrate from Clerk authentication to Better-auth for email/password + Google SSO
 ```
 
 ### Environment Variables
+
 ```
 # Better-auth Configuration
 BETTER_AUTH_SECRET=your-secret-key
@@ -131,18 +147,21 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
 
 ## Migration Strategy
+
 1. **Phase 1**: Complete Clerk removal (clean slate approach)
 2. **Phase 2**: Set up Better-auth server and database schema
-3. **Phase 3**: Implement Better-auth client and UI components
+3. **Phase 3**: Implement Better-auth client using HERO UI components
 4. **Phase 4**: Add route protection and finalize authentication system
 
 **Why Remove Clerk First?**
+
 - Avoids conflicts between authentication systems
 - Ensures clean codebase without mixed auth patterns
 - Makes it easier to implement Better-auth without legacy code interference
 - Reduces complexity during development and testing
 
 ## Notes
+
 - Maintain backward compatibility during migration
 - Test thoroughly in both browser and Electron environments
 - Use HeroUI components for consistent design

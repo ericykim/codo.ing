@@ -1,130 +1,41 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { z } from "zod";
-import { auth } from "../auth";
-
-// Validation schemas
-const signUpEmailSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Valid email is required"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  image: z.string().url().optional(),
-  callbackURL: z.string().url().optional(),
-});
-
-const signInEmailSchema = z.object({
-  email: z.string().email("Valid email is required"),
-  password: z.string().min(1, "Password is required"),
-  callbackURL: z.string().url().optional(),
-  rememberMe: z.boolean().optional(),
-});
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { auth } from "../lib/better-auth";
 
 /**
  * Better-auth route plugin for Fastify
- * Uses direct auth.api.* methods for better control
+ * Uses generic handler for all client-side auth
  */
 export async function authRoutes(fastify: FastifyInstance) {
-  // Email sign-up endpoint
-  fastify.post(
-    "/auth/sign-up/email",
+  // Better-auth generic handler for ALL auth routes
+  fastify.all(
+    "/auth/*",
     async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        const validatedBody = signUpEmailSchema.parse(request.body);
+        // Construct request URL
+        const url = new URL(request.url, `http://${request.headers.host}`);
 
-        const data = await auth.api.signUpEmail({
-          body: {
-            name: validatedBody.name,
-            email: validatedBody.email,
-            password: validatedBody.password,
-            image: validatedBody.image,
-            callbackURL: validatedBody.callbackURL,
-          },
+        // Convert Fastify headers to standard Headers object
+        const headers = new Headers();
+        Object.entries(request.headers).forEach(([key, value]) => {
+          if (value) headers.append(key, value.toString());
         });
-
-        return reply.status(200).send(data);
+        // Create Fetch API-compatible request
+        const req = new Request(url.toString(), {
+          method: request.method,
+          headers,
+          body: request.body ? JSON.stringify(request.body) : undefined,
+        });
+        // Process authentication request
+        const response = await auth.handler(req);
+        // Forward response to client
+        reply.status(response.status);
+        response.headers.forEach((value, key) => reply.header(key, value));
+        reply.send(response.body ? await response.text() : null);
       } catch (error) {
-        if (error instanceof z.ZodError) {
-          return reply.status(400).send({
-            error: "Validation failed",
-            details: error.issues,
-          });
-        }
-        fastify.log.error({ error }, "Sign-up error");
-        return reply.status(400).send({
-          error: "Sign-up failed",
-          details: error instanceof Error ? error.message : "Unknown error",
-        });
-      }
-    },
-  );
-
-  // Email sign-in endpoint
-  fastify.post(
-    "/auth/sign-in/email",
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      try {
-        const validatedBody = signInEmailSchema.parse(request.body);
-
-        const data = await auth.api.signInEmail({
-          body: {
-            email: validatedBody.email,
-            password: validatedBody.password,
-            callbackURL: validatedBody.callbackURL,
-            rememberMe: validatedBody.rememberMe ?? true,
-          },
-        });
-
-        return reply.status(200).send(data);
-      } catch (error) {
-        if (error instanceof z.ZodError) {
-          return reply.status(400).send({
-            error: "Validation failed",
-            details: error.issues,
-          });
-        }
-        fastify.log.error({ error }, "Sign-in error");
-        return reply.status(400).send({
-          error: "Sign-in failed",
-          details: error instanceof Error ? error.message : "Unknown error",
-        });
-      }
-    },
-  );
-
-  // Sign-out endpoint
-  fastify.post(
-    "/auth/sign-out",
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      try {
-        const data = await auth.api.signOut({
-          headers: request.headers as Record<string, string>,
-        });
-
-        return reply.status(200).send(data);
-      } catch (error) {
-        fastify.log.error({ error }, "Sign-out error");
-        return reply.status(400).send({
-          error: "Sign-out failed",
-          details: error instanceof Error ? error.message : "Unknown error",
-        });
-      }
-    },
-  );
-
-  // Session endpoint (get current session)
-  fastify.get(
-    "/auth/session",
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      try {
-        const session = await auth.api.getSession({
-          headers: request.headers as Record<string, string>,
-        });
-
-        return reply.status(200).send(session);
-      } catch (error) {
-        fastify.log.error({ error }, "Session error");
-        return reply.status(401).send({
-          error: "Session not found",
-          details: error instanceof Error ? error.message : "Unknown error",
+        fastify.log.error({ err: error }, "Authentication Error:");
+        reply.status(500).send({
+          error: "Internal authentication error",
+          code: "AUTH_FAILURE",
         });
       }
     },

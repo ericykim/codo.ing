@@ -13,7 +13,13 @@
       "path": "./apps/desktop"
     },
     {
-      "path": "./lib"
+      "path": "./lib/db"
+    },
+    {
+      "path": "./lib/schema"
+    },
+    {
+      "path": "./lib/trpc-server"
     }
   ]
 }
