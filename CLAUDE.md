@@ -60,7 +60,7 @@ When writing imports, follow these conventions:
 - React 19 with TypeScript
 - TanStack Router for routing
 - HeroUI design system with Tailwind CSS v4
-- Clerk authentication
+- Better-auth authentication (migrating from Clerk)
 - Electron desktop wrapper
 - Biome for code formatting and linting (no ESLint)
 - PostgreSQL database with Docker setup
@@ -126,3 +126,59 @@ function MyComponent() {
 - Initialize/modify schema: Add SQL files to `postgres/init/`
 - Access database: `docker compose exec postgres psql -U $POSTGRES_USER -d $POSTGRES_DB`
 - Stop database: `docker compose down postgres`
+
+## Authentication System (Better-auth)
+
+### Migration Status
+Currently migrating from Clerk to Better-auth for improved control and flexibility.
+See `CLERK_TO_BETTER_AUTH_MIGRATION.md` for detailed migration plan and todo list.
+
+### Better-auth Configuration
+- **Email/Password**: Primary authentication method
+- **Google SSO**: Social authentication option
+- **Database**: PostgreSQL with Better-auth schema
+- **Sessions**: Cookie-based session management
+- **Route Protection**: TanStack Router guards for auth/unauth routes
+
+### Authentication Flow
+```
+Unauthenticated users → /signin page
+Sign in (email/password or Google) → / (index route)
+Protected routes require authentication
+Session persists across page reloads/browser sessions
+```
+
+### Route Structure
+- `/signin` - Sign in page (unauthenticated only)
+- `/signup` - Sign up page (unauthenticated only)  
+- `/` - Index route (authenticated only)
+- All other routes - Protected (authenticated only)
+
+### Server API Endpoints
+- `/api/auth/signin` - Email/password + Google signin
+- `/api/auth/signup` - Email/password signup
+- `/api/auth/signout` - Logout endpoint
+- `/api/auth/session` - Session validation
+- `/trpc/*` - All tRPC routes (authenticated procedures only)
+
+### Environment Variables (Better-auth)
+```bash
+# Better-auth Configuration
+BETTER_AUTH_SECRET=your-secret-key
+BETTER_AUTH_URL=http://localhost:3000
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+```
+
+### Authentication Components
+- Use HeroUI components for consistent design
+- Better-auth client hooks for authentication state
+- TanStack Router integration for route protection
+- Proper loading states and error handling
+
+### Development Notes
+- Better-auth server config: `apps/server/src/lib/auth.ts`
+- Better-auth client: `apps/web/src/lib/auth-client.ts`
+- Authentication components: `apps/web/src/routes/signin.tsx`, `apps/web/src/routes/signup.tsx`
+- All tRPC procedures moved to authenticated middleware
+- Cross-platform testing required (browser + Electron)

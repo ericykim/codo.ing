@@ -1,11 +1,10 @@
-import { SignInButton, SignUpButton, useClerk, useUser } from '@clerk/clerk-react';
 import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react';
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
 function RootComponent() {
-  const { isSignedIn } = useUser();
-  const { signOut } = useClerk();
+  // Temporary: No auth state (always show as not signed in)
+  const isSignedIn = false;
 
   return (
     <>
@@ -29,19 +28,19 @@ function RootComponent() {
           {!isSignedIn ? (
             <>
               <NavbarItem>
-                <SignInButton>
-                  <Button variant="light">Sign In</Button>
-                </SignInButton>
+                <Button variant="light" disabled>
+                  Sign In (Coming Soon)
+                </Button>
               </NavbarItem>
               <NavbarItem>
-                <SignUpButton>
-                  <Button color="primary">Sign Up</Button>
-                </SignUpButton>
+                <Button color="primary" disabled>
+                  Sign Up (Coming Soon)
+                </Button>
               </NavbarItem>
             </>
           ) : (
             <NavbarItem>
-              <Button variant="light" onPress={() => signOut()}>
+              <Button variant="light" disabled>
                 Sign Out
               </Button>
             </NavbarItem>

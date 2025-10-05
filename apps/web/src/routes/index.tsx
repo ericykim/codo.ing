@@ -1,4 +1,3 @@
-import { useUser } from '@clerk/clerk-react';
 import { createFileRoute } from '@tanstack/react-router';
 import { Card, CardBody, CardHeader, Spinner } from "@heroui/react";
 import { trpc } from "../trpc";
@@ -8,7 +7,9 @@ export const Route = createFileRoute('/')({
 });
 
 function Index() {
-  const { isSignedIn, user } = useUser();
+  // Temporary: No auth state (allow access to all routes)
+  const isSignedIn = false;
+  const user = null;
   const { data: greeting, isLoading } = trpc.test.hello.useQuery({ 
     name: "World" 
   });
@@ -23,23 +24,20 @@ function Index() {
         </div>
       </div>
 
-      {isSignedIn ? (
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Welcome back, {user?.firstName || 'User'}!</h2>
-          <p className="text-gray-600">Your collaborative workspace is ready.</p>
-          <div className="p-4 border rounded-lg bg-gray-50">
-            <p className="text-sm text-gray-600">
-              Database integration coming soon. Jazz has been removed and ready for your preferred
-              data solution.
-            </p>
-          </div>
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Welcome to Codo.ing</h2>
+        <p className="text-gray-600">Authentication system migration in progress. All routes are temporarily accessible.</p>
+        <div className="p-4 border rounded-lg bg-yellow-50 border-yellow-200">
+          <p className="text-sm text-yellow-800">
+            🚧 Currently migrating from Clerk to Better-auth. Authentication features coming soon.
+          </p>
         </div>
-      ) : (
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Get Started</h2>
-          <p className="text-gray-600">Sign in to access your collaborative workspace.</p>
+        <div className="p-4 border rounded-lg bg-gray-50">
+          <p className="text-sm text-gray-600">
+            Database integration ready for your preferred data solution.
+          </p>
         </div>
-      )}
+      </div>
 
       <Card>
         <CardHeader>

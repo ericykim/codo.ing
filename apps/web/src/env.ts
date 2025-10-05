@@ -2,8 +2,7 @@ import { z } from 'zod';
 
 // Environment schema validation for web app
 const envSchema = z.object({
-  VITE_CLERK_PUBLISHABLE_KEY: z.string().min(1, 'Clerk publishable key is required'),
-  VITE_API_URL: z.string().url('API URL must be a valid URL').default('http://localhost:3001'),
+  VITE_API_URL: z.string().url('API URL must be a valid URL').default('http://localhost:3333'),
 });
 
 // Parse and validate environment variables

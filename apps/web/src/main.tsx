@@ -1,10 +1,8 @@
-import { ClerkProvider } from "@clerk/clerk-react";
 import { HeroUIProvider } from "@heroui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import * as ReactDOM from "react-dom/client";
-import { env } from "./env";
 import { trpc, trpcClient } from "./trpc";
 import { routeTree } from "./routeTree.gen";
 import "./styles.css";
@@ -26,12 +24,7 @@ root.render(
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <HeroUIProvider>
-          <ClerkProvider
-            publishableKey={env.VITE_CLERK_PUBLISHABLE_KEY}
-            afterSignOutUrl="/"
-          >
-            <RouterProvider router={router} />
-          </ClerkProvider>
+          <RouterProvider router={router} />
         </HeroUIProvider>
       </QueryClientProvider>
     </trpc.Provider>
