@@ -25,6 +25,11 @@ When creating UI components, prioritize HeroUI components first:
 - Lint & format: `bun run lint` and `bun run format`
 - Database setup: `./scripts/db-setup.sh` or `docker compose up -d postgres`
 
+### Database Tools
+- Database studio: `bun db:studio` - **Note**: Ignore CompressionStream errors, studio still works at https://local.drizzle.studio
+- Generate migrations: `bun db:generate`
+- Apply migrations: `bun db:migrate`
+
 ## Development Workflow
 
 For full development, run these in separate terminals:
@@ -45,6 +50,10 @@ For full development, run these in separate terminals:
 - Uses Tailwind CSS v4 with official Vite plugin
 - HeroUI theme configured via `tailwind.config.ts`
 - No separate CSS imports needed - HeroUI uses Tailwind utilities
+
+## Reference Documentation
+
+**IMPORTANT**: When working on Better-auth related features, ALWAYS reference the comprehensive documentation in `/llm/better-auth.md` first. This file contains the complete Better-auth documentation with proper implementation patterns, API usage, and OAuth flows.
 
 ## Import Guidelines
 

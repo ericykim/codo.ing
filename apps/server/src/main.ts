@@ -4,8 +4,9 @@ import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
 import { config } from 'dotenv';
 import Fastify from 'fastify';
 import { resolve } from 'path';
-import { env } from './lib/env';
+import { env } from './env';
 import { trpcRouter } from '@codoing/trpc-server';
+import { registerRoutes } from './routes';
 
 config({ path: resolve(process.cwd(), '.env') });
 
@@ -31,20 +32,17 @@ async function main() {
 
   // Register CORS
   await server.register(cors, {
-    origin: env.NODE_ENV === 'development' ? 'http://localhost:4200' : false,
+    origin: env.NODE_ENV === 'development' ? env.WEB_URL : false,
     credentials: true,
   });
+
+  // Register all routes (auth, health, etc.)
+  await server.register(registerRoutes);
 
   // Register tRPC plugin
   await server.register(fastifyTRPCPlugin, {
     prefix: '/trpc',
     trpcOptions: { router: trpcRouter },
-  });
-
-  // Health check endpoint
-  server.get('/health', async (request, reply) => {
-    server.log.info('Health check requested');
-    return { status: 'ok', timestamp: new Date().toISOString() };
   });
 
   // Start server
@@ -56,6 +54,7 @@ async function main() {
 
     server.log.info(`🚀 Server running at http://localhost:${env.PORT}`);
     server.log.info(`📡 tRPC endpoint: http://localhost:${env.PORT}/trpc`);
+    server.log.info(`🔐 Auth endpoints: http://localhost:${env.PORT}/api/auth/*`);
     server.log.info(`🏥 Health check: http://localhost:${env.PORT}/health`);
     server.log.info(`🌍 Environment: ${env.NODE_ENV}`);
   } catch (err) {

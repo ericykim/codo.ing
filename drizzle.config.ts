@@ -3,8 +3,8 @@ import { defineConfig } from "drizzle-kit";
 export default defineConfig({
   schema: "./lib/schema/src/models/*.ts",
   out: "./lib/schema/migrations",
-  driver: "pg",
+  dialect: "postgresql",
   dbCredentials: {
-    connectionString: "postgresql://postgres:postgres@localhost:5432/codoing",
+    url: "postgresql://postgres:postgres@localhost:5432/codoing",
   },
 });
