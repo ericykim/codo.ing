@@ -5,11 +5,7 @@
   "scripts": {
     "build": "bun build src/main.ts --outdir dist --target node",
     "start": "bun dist/main.js",
-    "dev": "bun --watch src/main.ts",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "dev": "bun --watch src/main.ts"
   },
   "dependencies": {
     "@codoing/schema": "workspace:*",
@@ -25,7 +21,6 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.9",
-    "drizzle-kit": "^0.20.18",
     "pino-pretty": "^11.0.0",
     "typescript": "~5.9.2"
   }
