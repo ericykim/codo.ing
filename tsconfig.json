@@ -13,7 +13,7 @@
       "path": "./apps/desktop"
     },
     {
-      "path": "./packages"
+      "path": "./lib"
     }
   ]
 }

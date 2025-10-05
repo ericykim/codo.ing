@@ -5,19 +5,27 @@
   "scripts": {
     "build": "bun build src/main.ts --outdir dist --target node",
     "start": "bun dist/main.js",
-    "dev": "bun --watch src/main.ts"
+    "dev": "bun --watch src/main.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@codoing/schema": "workspace:*",
     "@codoing/trpc-server": "workspace:*",
     "@fastify/cors": "^11.1.0",
     "@trpc/server": "^11.6.0",
     "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.29.5",
     "fastify": "^5.6.1",
     "pino": "^8.19.0",
+    "postgres": "^3.4.3",
     "zod": "^4.1.11"
   },
   "devDependencies": {
     "@types/node": "^20.19.9",
+    "drizzle-kit": "^0.20.18",
     "pino-pretty": "^11.0.0",
     "typescript": "~5.9.2"
   }
