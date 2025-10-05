@@ -8,19 +8,19 @@ import {
   Link,
   Checkbox,
   Divider,
-  Spinner,
 } from "@heroui/react";
-import { signIn, signOut, useSession } from "../../lib/auth";
-import { cn } from "../../utils/cn";
+import { useSession } from "@/hooks/useSession";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
-  
+
   // Use Better-auth session hook
   const { data: session, isPending } = useSession();
+  const { signIn } = useAuth();
   const isLoading = isPending;
 
   return (
@@ -82,19 +82,22 @@ export default function SignIn() {
               setError("");
 
               try {
-                await signIn.email({
-                  email,
-                  password,
-                  rememberMe,
-                }, {
-                  onError: (ctx) => {
-                    setError(ctx.error.message || "Sign in failed");
+                await signIn.email(
+                  {
+                    email,
+                    password,
+                    rememberMe,
                   },
-                  onSuccess: () => {
-                    console.log("Signed in successfully");
-                    // Session will be automatically updated via useSession hook
+                  {
+                    onError: (ctx) => {
+                      setError(ctx.error.message || "Sign in failed");
+                    },
+                    onSuccess: () => {
+                      console.log("Signed in successfully");
+                      // Session will be automatically updated via useSession hook
+                    },
                   },
-                });
+                );
               } catch (err) {
                 setError("An unexpected error occurred");
               }
@@ -112,14 +115,17 @@ export default function SignIn() {
             onPress={async () => {
               setError("");
               try {
-                await signIn.social({
-                  provider: "google",
-                  callbackURL: "/dashboard",
-                }, {
-                  onError: (ctx) => {
-                    setError("Google sign in failed");
+                await signIn.social(
+                  {
+                    provider: "google",
+                    callbackURL: "/dashboard",
                   },
-                });
+                  {
+                    onError: (ctx) => {
+                      setError("Google sign in failed");
+                    },
+                  },
+                );
               } catch (err) {
                 setError("Google sign in failed");
               }

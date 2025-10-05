@@ -4,7 +4,4 @@ import { env } from "../env";
 export const authClient = createAuthClient({
   baseURL: env.VITE_API_URL,
   basePath: "/api/v1/auth", // Match your server basePath
-});
-
-// Export hooks for easy use in components
-export const { signIn, signUp, signOut, useSession } = authClient;
+}) as ReturnType<typeof createAuthClient>;

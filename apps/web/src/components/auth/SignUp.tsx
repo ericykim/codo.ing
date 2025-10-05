@@ -5,14 +5,11 @@ import {
   CardBody,
   CardHeader,
   Input,
-  Link,
   Avatar,
-  Divider,
-  Spinner,
 } from "@heroui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { cn } from "../../utils/cn";
-import { signUp, signIn, useSession } from "../../lib/auth";
+import { useSession } from "@/hooks/useSession";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -26,6 +23,7 @@ export default function SignUp() {
 
   // Use Better-auth session hook
   const { data: session, isPending } = useSession();
+  const { signUp } = useAuth();
   const isLoading = isPending;
 
   const passwordsMatch = password === passwordConfirmation;
