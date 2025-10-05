@@ -13,10 +13,12 @@
     "@trpc/server": "^11.6.0",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.1",
+    "pino": "^8.19.0",
     "zod": "^4.1.11"
   },
   "devDependencies": {
     "@types/node": "^20.19.9",
+    "pino-pretty": "^11.0.0",
     "typescript": "~5.9.2"
   }
 }

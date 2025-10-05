@@ -10,9 +10,23 @@ import { trpcRouter } from '@codoing/trpc-server';
 config({ path: resolve(process.cwd(), '.env') });
 
 async function main() {
-  // Create Fastify instance
+  // Create Fastify instance with pretty logging in development
   const server = Fastify({
-    logger: env.NODE_ENV === 'development',
+    logger: env.NODE_ENV === 'development' ? {
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          colorize: true,
+          translateTime: 'HH:MM:ss Z',
+          ignore: 'pid,hostname',
+          messageFormat: '{msg}',
+          levelFirst: true
+        }
+      },
+      level: 'info'
+    } : {
+      level: 'info'
+    },
   });
 
   // Register CORS
@@ -28,7 +42,8 @@ async function main() {
   });
 
   // Health check endpoint
-  server.get('/health', async () => {
+  server.get('/health', async (request, reply) => {
+    server.log.info('Health check requested');
     return { status: 'ok', timestamp: new Date().toISOString() };
   });
 
@@ -39,11 +54,12 @@ async function main() {
       host: '0.0.0.0',
     });
 
-    console.log(`🚀 Server running at http://localhost:${env.PORT}`);
-    console.log(`📡 tRPC endpoint: http://localhost:${env.PORT}/trpc`);
-    console.log(`🏥 Health check: http://localhost:${env.PORT}/health`);
+    server.log.info(`🚀 Server running at http://localhost:${env.PORT}`);
+    server.log.info(`📡 tRPC endpoint: http://localhost:${env.PORT}/trpc`);
+    server.log.info(`🏥 Health check: http://localhost:${env.PORT}/health`);
+    server.log.info(`🌍 Environment: ${env.NODE_ENV}`);
   } catch (err) {
-    server.log.error(err);
+    server.log.error({ err }, 'Failed to start server');
     process.exit(1);
   }
 }
