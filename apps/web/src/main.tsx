@@ -1,34 +1,39 @@
-import { ClerkProvider } from '@clerk/clerk-react';
-import { HeroUIProvider } from '@heroui/react';
-import { createRouter, RouterProvider } from '@tanstack/react-router';
-import { StrictMode } from 'react';
-import * as ReactDOM from 'react-dom/client';
-import { routeTree } from './routeTree.gen';
-import './styles.css';
-
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-if (!PUBLISHABLE_KEY) {
-  throw new Error('Missing Clerk Publishable Key');
-}
+import { ClerkProvider } from "@clerk/clerk-react";
+import { HeroUIProvider } from "@heroui/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { StrictMode } from "react";
+import * as ReactDOM from "react-dom/client";
+import { env } from "./env";
+import { trpc, trpcClient } from "./trpc";
+import { routeTree } from "./routeTree.gen";
+import "./styles.css";
+import "./router.d.ts";
 
 const router = createRouter({
   routeTree,
 });
 
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router;
-  }
-}
+// Create Query Client
+const queryClient = new QueryClient();
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement,
+);
 
 root.render(
   <StrictMode>
-    <HeroUIProvider>
-      <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-        <RouterProvider router={router} />
-      </ClerkProvider>
-    </HeroUIProvider>
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <HeroUIProvider>
+          <ClerkProvider
+            publishableKey={env.VITE_CLERK_PUBLISHABLE_KEY}
+            afterSignOutUrl="/"
+          >
+            <RouterProvider router={router} />
+          </ClerkProvider>
+        </HeroUIProvider>
+      </QueryClientProvider>
+    </trpc.Provider>
   </StrictMode>,
 );

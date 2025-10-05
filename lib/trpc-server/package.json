@@ -1,0 +1,25 @@
+{
+  "name": "@codoing/trpc-server",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "@trpc/server": "^11.6.0",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.2"
+  }
+}

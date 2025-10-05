@@ -16,6 +16,12 @@ export default defineConfig({
   server: {
     port: 4200,
     host: "localhost",
+    hmr: {
+      port: 4200,
+    },
+    watch: {
+      usePolling: true,
+    },
   },
 
   preview: {

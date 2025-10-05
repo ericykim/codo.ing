@@ -1,0 +1,30 @@
+{
+  "name": "trpc-server",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "lib/trpc-server/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc",
+        "cwd": "lib/trpc-server"
+      },
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --watch",
+        "cwd": "lib/trpc-server"
+      }
+    },
+    "watch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --watch",
+        "cwd": "lib/trpc-server"
+      }
+    }
+  }
+}

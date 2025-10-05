@@ -1,5 +1,7 @@
 import { useUser } from '@clerk/clerk-react';
 import { createFileRoute } from '@tanstack/react-router';
+import { Card, CardBody, CardHeader, Spinner } from "@heroui/react";
+import { trpc } from "../trpc";
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -7,6 +9,9 @@ export const Route = createFileRoute('/')({
 
 function Index() {
   const { isSignedIn, user } = useUser();
+  const { data: greeting, isLoading } = trpc.test.hello.useQuery({ 
+    name: "World" 
+  });
 
   return (
     <div className="space-y-6">
@@ -35,6 +40,21 @@ function Index() {
           <p className="text-gray-600">Sign in to access your collaborative workspace.</p>
         </div>
       )}
+
+      <Card>
+        <CardHeader>
+          <h2 className="text-xl font-semibold">tRPC Test</h2>
+        </CardHeader>
+        <CardBody>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <p className="text-green-600 font-medium">
+              {greeting?.greeting}
+            </p>
+          )}
+        </CardBody>
+      </Card>
     </div>
   );
 }

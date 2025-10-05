@@ -8,6 +8,8 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "web": "nx serve web",
+    "server": "nx serve server", 
+    "trpc": "nx dev trpc-server",
     "electron": "nx serve desktop",
     "nxe:build:frontend": "nx build web",
     "nxe:build:backend": "nx build desktop",
@@ -19,19 +21,7 @@
     "nxe:make:app": "nx run desktop:make"
   },
   "private": true,
-  "dependencies": {
-    "@clerk/clerk-react": "^5.47.0",
-    "@heroui/react": "^2.8.4",
-    "@heroui/theme": "^2.4.22",
-    "@tanstack/react-router": "^1.131.49",
-    "@tanstack/router-devtools": "^1.131.49",
-    "@tanstack/router-plugin": "^1.131.49",
-    "framer-motion": "^12.23.16",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "react-router-dom": "6.29.0",
-    "zod": "^4.1.11"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.14.5",
     "@babel/preset-react": "^7.14.5",
@@ -81,6 +71,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "lib/*"
   ]
 }
