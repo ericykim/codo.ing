@@ -160,17 +160,18 @@ See `CLERK_TO_BETTER_AUTH_MIGRATION.md` for migration history and reference.
 
 ### Authentication Flow
 ```
-Unauthenticated users → /signin page
-Sign in (email/password or Google) → / (index route)
-Protected routes require authentication
+Unauthenticated users → / (marketing page) → /signIn → /app (dashboard)
+Authenticated users accessing / or /signIn → automatically redirected to /app
+All /app/* routes require authentication
 Session persists across page reloads/browser sessions
 ```
 
 ### Route Structure
-- `/signin` - Sign in page (unauthenticated only)
-- `/signup` - Sign up page (unauthenticated only)  
-- `/` - Index route (authenticated only)
-- All other routes - Protected (authenticated only)
+- `/` - Marketing landing page (public)
+- `/signIn` - Sign in/sign up page with tabs (unauthenticated only)
+- `/app` - Authenticated app layout with navigation
+- `/app/` (index) - Dashboard with user content (authenticated only)
+- `/app/about` - About page within app (authenticated only)
 
 ### Server API Endpoints
 - `/api/auth/*` - All Better-auth endpoints (signin, signup, signout, session, etc.)

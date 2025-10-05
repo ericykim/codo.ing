@@ -11,6 +11,7 @@ import {
 } from "@heroui/react";
 import { useSession } from "@/hooks/useSession";
 import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -21,6 +22,7 @@ export default function SignIn() {
   // Use Better-auth session hook
   const { data: session, isPending } = useSession();
   const { signIn } = useAuth();
+  const navigate = useNavigate();
   const isLoading = isPending;
 
   return (
@@ -94,7 +96,10 @@ export default function SignIn() {
                     },
                     onSuccess: () => {
                       console.log("Signed in successfully");
-                      // Session will be automatically updated via useSession hook
+                      // Navigate to app after successful sign in
+                      setTimeout(() => {
+                        navigate({ to: "/app" });
+                      }, 100);
                     },
                   },
                 );
@@ -114,15 +119,20 @@ export default function SignIn() {
             isLoading={isLoading}
             onPress={async () => {
               setError("");
+              
               try {
                 await signIn.social(
                   {
                     provider: "google",
-                    callbackURL: "/dashboard",
+                    callbackURL: "/app",
                   },
                   {
                     onError: (ctx) => {
                       setError("Google sign in failed");
+                    },
+                    onSuccess: () => {
+                      // For OAuth, the redirect happens automatically via callbackURL
+                      // No need for manual navigation here
                     },
                   },
                 );

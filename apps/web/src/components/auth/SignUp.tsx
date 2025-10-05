@@ -178,15 +178,15 @@ export default function SignUp() {
                     image: image
                       ? await convertImageToBase64(image)
                       : undefined,
-                    callbackURL: "/home",
+                    callbackURL: "/app",
                   },
                   {
                     onError: (ctx) => {
                       setError(ctx.error.message || "Sign up failed");
                     },
                     onSuccess: () => {
-                      console.log("Signed up successfully");
-                      // Session will be automatically updated via useSession hook
+                      console.log("Signed up and signed in successfully");
+                      // Better-auth handles auto sign-in and redirect
                     },
                   },
                 );
