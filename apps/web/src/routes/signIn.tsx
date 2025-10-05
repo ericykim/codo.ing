@@ -11,11 +11,15 @@ export const Route = createFileRoute("/signIn")({
 
 function SignInPage() {
   const [selectedTab, setSelectedTab] = useState<string>("signin");
-  const { data: session, isLoading } = useSession();
+  const { data: session, isPending } = useSession();
 
   // Redirect to app if already authenticated
-  if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (isPending) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
   if (session?.user) {

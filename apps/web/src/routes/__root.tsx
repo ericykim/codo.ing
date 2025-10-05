@@ -1,11 +1,27 @@
-import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem, Avatar, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/react';
-import { createRootRoute, Link, Outlet, useLocation } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
-import { useSession } from '../hooks/useSession';
+import {
+  Button,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Avatar,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@heroui/react";
+import {
+  createRootRoute,
+  Link,
+  Outlet,
+  useLocation,
+} from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { useSession } from "../hooks/useSession";
 
 function RootComponent() {
   const location = useLocation();
-  const isInApp = location.pathname.startsWith('/app');
+  const isInApp = location.pathname.startsWith("/app");
   const { data: session, isPending } = useSession();
 
   return (
@@ -40,9 +56,7 @@ function RootComponent() {
               <>
                 <NavbarItem>
                   <Link to="/app">
-                    <Button color="primary">
-                      Go to App
-                    </Button>
+                    <Button color="primary">Go to App</Button>
                   </Link>
                 </NavbarItem>
                 <NavbarItem>
@@ -55,7 +69,7 @@ function RootComponent() {
                         color="primary"
                         name={session.user.name || session.user.email}
                         size="sm"
-                        src={session.user.image}
+                        src={session.user.image ?? ""}
                       />
                     </DropdownTrigger>
                     <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -77,16 +91,12 @@ function RootComponent() {
               <>
                 <NavbarItem>
                   <Link to="/signIn">
-                    <Button variant="light">
-                      Sign In
-                    </Button>
+                    <Button variant="light">Sign In</Button>
                   </Link>
                 </NavbarItem>
                 <NavbarItem>
                   <Link to="/signIn">
-                    <Button color="primary">
-                      Sign Up
-                    </Button>
+                    <Button color="primary">Sign Up</Button>
                   </Link>
                 </NavbarItem>
               </>
