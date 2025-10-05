@@ -29,6 +29,7 @@ When creating UI components, prioritize HeroUI components first:
 - Database studio: `bun db:studio` - **Note**: Ignore CompressionStream errors, studio still works at https://local.drizzle.studio
 - Generate migrations: `bun db:generate`
 - Apply migrations: `bun db:migrate`
+- Reset database: `bun db:reset` (drops all tables and re-runs migrations)
 
 ## Development Workflow
 
@@ -55,6 +56,8 @@ For full development, run these in separate terminals:
 
 **IMPORTANT**: When working on Better-auth related features, ALWAYS reference the comprehensive documentation in `/llm/better-auth.md` first. This file contains the complete Better-auth documentation with proper implementation patterns, API usage, and OAuth flows.
 
+**CRITICAL**: For ANY Better-auth questions or issues, first consult `/llm/better-auth.md` before implementing solutions. This ensures proper implementation following Better-auth best practices.
+
 ## Import Guidelines
 
 When writing imports, follow these conventions:
@@ -69,13 +72,14 @@ When writing imports, follow these conventions:
 - React 19 with TypeScript
 - TanStack Router for routing
 - HeroUI design system with Tailwind CSS v4
-- Better-auth authentication (migrating from Clerk)
+- Better-auth authentication (✅ migrated from Clerk)
 - Electron desktop wrapper
 - Biome for code formatting and linting (no ESLint)
-- PostgreSQL database with Docker setup
+- PostgreSQL database with Docker setup and Drizzle ORM
 - Fastify API server with tRPC
 - TanStack Query for client-side data fetching
 - Zod schema validation for environment variables and API
+- Drizzle ORM for type-safe database operations
 
 ## Database Setup
 
@@ -97,6 +101,10 @@ Server configuration is managed through environment variables in `apps/server/.e
 - `DATABASE_URL` - Full connection string (auto-generated if not provided)
 - `PORT` - Server port (default: 3000)
 - `NODE_ENV` - Environment (default: development)
+- `BETTER_AUTH_SECRET` - Better-auth secret key
+- `BETTER_AUTH_URL` - Better-auth base URL (default: http://localhost:3333)
+- `GOOGLE_CLIENT_ID` - Google OAuth client ID
+- `GOOGLE_CLIENT_SECRET` - Google OAuth client secret
 
 ### Environment Validation
 Server uses `apps/server/src/lib/env.ts` for Zod-based environment variable validation:
@@ -106,19 +114,19 @@ import { env, DATABASE_URL } from './lib/env';
 ```
 
 ### tRPC API
-- Server router: `apps/server/src/lib/trpc.ts`
-- Client hooks: `apps/web/src/lib/trpc.ts`
-- API endpoint: `http://localhost:3000/trpc`
-- Health check: `http://localhost:3000/health`
+- Server router: `lib/trpc-server/src/trpc.ts`
+- Client hooks: `apps/web/src/trpc.ts`
+- API endpoint: `http://localhost:3333/trpc`
+- Health check: `http://localhost:3333/health`
+- Authentication: All tRPC procedures require valid session
 
 ### Usage Example
 ```typescript
 // In React components
-import { trpc } from '../lib/trpc';
+import { trpc } from '../trpc';
 
 function MyComponent() {
-  const { data, isLoading } = trpc.hello.useQuery({ name: 'World' });
-  const { data: users } = trpc.getUsers.useQuery();
+  const { data, isLoading } = trpc.test.getHello.useQuery({ name: 'World' });
   
   return <div>{data?.greeting}</div>;
 }
@@ -132,15 +140,16 @@ function MyComponent() {
 3. Connection string: Uses `DATABASE_URL` environment variable
 
 ### Database Management
-- Initialize/modify schema: Add SQL files to `postgres/init/`
+- Schema definition: `lib/schema/src/models/` (Drizzle schema files)
+- Initialize/modify schema: Add SQL files to `postgres/init/` or create Drizzle migrations
 - Access database: `docker compose exec postgres psql -U $POSTGRES_USER -d $POSTGRES_DB`
 - Stop database: `docker compose down postgres`
 
 ## Authentication System (Better-auth)
 
 ### Migration Status
-Currently migrating from Clerk to Better-auth for improved control and flexibility.
-See `CLERK_TO_BETTER_AUTH_MIGRATION.md` for detailed migration plan and todo list.
+✅ **COMPLETED**: Successfully migrated from Clerk to Better-auth for improved control and flexibility.
+See `CLERK_TO_BETTER_AUTH_MIGRATION.md` for migration history and reference.
 
 ### Better-auth Configuration
 - **Email/Password**: Primary authentication method
@@ -164,9 +173,11 @@ Session persists across page reloads/browser sessions
 - All other routes - Protected (authenticated only)
 
 ### Server API Endpoints
-- `/api/auth/signin` - Email/password + Google signin
-- `/api/auth/signup` - Email/password signup
-- `/api/auth/signout` - Logout endpoint
+- `/api/auth/*` - All Better-auth endpoints (signin, signup, signout, session, etc.)
+- `/api/auth/sign-in/email` - Email/password signin
+- `/api/auth/sign-up/email` - Email/password signup
+- `/api/auth/sign-in/google` - Google OAuth signin
+- `/api/auth/sign-out` - Logout endpoint
 - `/api/auth/session` - Session validation
 - `/trpc/*` - All tRPC routes (authenticated procedures only)
 
@@ -174,7 +185,7 @@ Session persists across page reloads/browser sessions
 ```bash
 # Better-auth Configuration
 BETTER_AUTH_SECRET=your-secret-key
-BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_URL=http://localhost:3333
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
@@ -186,8 +197,11 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 - Proper loading states and error handling
 
 ### Development Notes
-- Better-auth server config: `apps/server/src/lib/auth.ts`
-- Better-auth client: `apps/web/src/lib/auth-client.ts`
-- Authentication components: `apps/web/src/routes/signin.tsx`, `apps/web/src/routes/signup.tsx`
+- Better-auth server config: `apps/server/src/lib/better-auth.ts`
+- Better-auth client: `apps/web/src/lib/auth.ts`
+- Auth hooks: `apps/web/src/hooks/useAuth.ts`, `apps/web/src/hooks/useSession.ts`
+- Authentication components: `apps/web/src/components/auth/SignIn.tsx`, `apps/web/src/components/auth/SignUp.tsx`
+- Route components: `apps/web/src/routes/signin.tsx`, `apps/web/src/routes/signup.tsx`
+- Database schema: `lib/schema/src/models/auth.ts` (Better-auth tables)
 - All tRPC procedures moved to authenticated middleware
 - Cross-platform testing required (browser + Electron)

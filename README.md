@@ -1,13 +1,13 @@
 # Codo.ing
 
-A cross-platform collaborative note-taking application ready for your preferred database and collaboration solution.
+A cross-platform collaborative note-taking application with Better-auth authentication and PostgreSQL database.
 
 ## Architecture
 
-- **Web**: React 19 app with HeroUI design system, Clerk authentication, TanStack Router
+- **Web**: React 19 app with HeroUI design system, Better-auth authentication, TanStack Router
 - **Desktop**: Electron app (✅ **implemented**) - loads web app as renderer
 - **Mobile**: React Native with Expo (planned) - will use Tentap Editor
-- **Backend**: Ready for your preferred solution (Electric-SQL, Supabase, etc.)
+- **Backend**: Fastify API server with tRPC, PostgreSQL database with Drizzle ORM
 - **Infrastructure**: SST for AWS deployment (planned)
 
 ## Quick Start
@@ -23,24 +23,39 @@ A cross-platform collaborative note-taking application ready for your preferred 
    bun install
    ```
 
-2. **Start the web app**
+2. **Set up database**
    ```bash
-   bun nx serve web
+   ./scripts/db-setup.sh
+   ```
+
+3. **Start development servers**
+   ```bash
+   # Terminal 1: Start tRPC package watcher
+   bun run trpc
+   
+   # Terminal 2: Start API server
+   bun run server
+   
+   # Terminal 3: Start web app
+   bun run web
    ```
    
    The app will be available at http://localhost:4200
 
-3. **Start the desktop app** (requires web app to be running)
+4. **Start the desktop app** (optional, requires web app to be running)
    ```bash
-   # Terminal 1: Start web app
-   bun nx serve web
-   
-   # Terminal 2: Start desktop app  
-   bun nx serve desktop
+   # Terminal 4: Start desktop app  
+   bun run electron
    ```
 
-4. **Build for production**
+5. **Build for production**
    ```bash
+   # tRPC package
+   bun nx build trpc-server
+   
+   # API server
+   bun nx build server
+   
    # Web app
    bun nx build web
    
@@ -48,7 +63,7 @@ A cross-platform collaborative note-taking application ready for your preferred 
    bun nx build desktop
    ```
 
-5. **Run E2E tests**
+6. **Run E2E tests**
    ```bash
    bun nx e2e e2e
    ```
@@ -59,28 +74,36 @@ A cross-platform collaborative note-taking application ready for your preferred 
 apps/
 ├── web/           # React 19 web application (Vite)
 ├── desktop/       # Electron desktop app (✅ implemented)
-├── e2e/           # Cross-platform E2E tests
-├── mobile/        # React Native with Expo (planned)
-└── server/        # Jazz sync server (planned)
+├── server/        # Fastify API server (✅ implemented)
+└── e2e/           # Cross-platform E2E tests
 
-packages/
-├── shared/        # Shared business logic (planned)
-├── ui/            # Cross-platform design system (planned)
-├── editor-web/    # Block Notes integration (planned)
-├── editor-mobile/ # Tentap Editor integration (planned)
-└── jazz-schemas/  # Jazz data models (planned)
+lib/
+├── db/            # Database connection and utilities
+├── schema/        # Drizzle ORM schema and migrations
+└── trpc-server/   # tRPC router and procedures
+
+scripts/
+└── db-setup.sh    # Database initialization script
+
+postgres/
+└── init/          # PostgreSQL initialization scripts
 
 llm/
 ├── CLAUDE.md      # Project context for AI
-└── llms-full.txt  # Jazz documentation
+├── better-auth.md # Better-auth documentation
+└── ElectricSQL.md # Legacy documentation
 ```
 
 ### Available Commands
 
 **Development:**
-- `bun nx serve web` - Start web development server (localhost:4200)
-- `bun nx serve desktop` - Start Electron desktop app
+- `bun run web` - Start web development server (localhost:4200)
+- `bun run server` - Start API server (localhost:3333)
+- `bun run trpc` - Start tRPC package watcher
+- `bun run electron` - Start Electron desktop app
 - `bun nx build web` - Build web app for production  
+- `bun nx build server` - Build API server for production
+- `bun nx build trpc-server` - Build tRPC package
 - `bun nx build desktop` - Build desktop app for production
 
 **Code Quality:**
@@ -88,6 +111,12 @@ llm/
 - `bun run lint` - Run Biome linter  
 - `bun nx test web` - Run unit tests
 - `bun nx e2e e2e` - Run E2E tests
+
+**Database:**
+- `./scripts/db-setup.sh` - Set up PostgreSQL database
+- `bun db:studio` - Open Drizzle Studio
+- `bun db:generate` - Generate migrations
+- `bun db:migrate` - Apply migrations
 
 **Utilities:**
 - `bun nx graph` - View dependency graph
@@ -101,18 +130,22 @@ llm/
 - [x] Biome integration for code quality (replaced Prettier/ESLint)
 - [x] React 19 foundation with TanStack Router for type-safe routing
 - [x] HeroUI design system with Tailwind CSS integration
-- [x] Clerk authentication (Sign In/Sign Up/User Management)
+- [x] Better-auth authentication with email/password and Google OAuth
+- [x] PostgreSQL database with Docker setup
+- [x] Drizzle ORM for type-safe database operations
+- [x] Fastify API server with tRPC integration
 - [x] Electron desktop app implementation
 - [x] MCP server integration for AI development
 - [x] TypeScript configuration across all projects
 - [x] Cross-platform development workflow
+- [x] Authentication middleware and route protection
 
 **🚧 Next Steps:**
-- [ ] Choose and integrate database solution (Electric-SQL, Supabase, etc.)
 - [ ] Implement rich text editor (Block Notes for web)
 - [ ] Add React Native mobile app with Expo
 - [ ] Implement Tentap Editor (mobile)
 - [ ] Create shared packages for business logic
+- [ ] Add user dashboard and note management features
 
 **📋 Future:**
 - [ ] SST infrastructure setup
@@ -149,7 +182,9 @@ bunx nx-mcp --transport sse --port 9921
 - **Monorepo**: Nx 21 with Bun package manager
 - **Web**: React 19, TypeScript, Vite, TanStack Router
 - **UI**: HeroUI design system with Tailwind CSS
-- **Auth**: Clerk (authentication & user management)
+- **Auth**: Better-auth (email/password + Google OAuth)
+- **Backend**: Fastify API server with tRPC
+- **Database**: PostgreSQL with Drizzle ORM
 - **Desktop**: Electron with nx-electron
 - **Mobile**: React Native with Expo (planned)
 
@@ -159,7 +194,6 @@ bunx nx-mcp --transport sse --port 9921
 - **AI Integration**: Nx MCP Server for Claude Code
 
 **Planned:**
-- **Database**: Your choice (Electric-SQL, Supabase, Firebase, etc.)
 - **Rich Text**: Block Notes (web), Tentap Editor (mobile)
 - **Infrastructure**: SST (AWS deployment)
 
