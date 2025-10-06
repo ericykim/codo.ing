@@ -25,31 +25,14 @@ function RootComponent() {
   const { data: session, isPending } = useSession();
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       {!isInApp && (
-        <Navbar className="bg-white/80 backdrop-blur-md">
+        <Navbar className="bg-white/80 backdrop-blur-md flex-shrink-0">
           <NavbarBrand>
             <Link to="/" className="font-bold text-lg">
               Codo<span className="text-primary">.ing</span>
             </Link>
           </NavbarBrand>
-          <NavbarContent className="hidden sm:flex gap-4" justify="center">
-            <NavbarItem>
-              <Link to="/" className="[&.active]:text-primary">
-                Home
-              </Link>
-            </NavbarItem>
-            <NavbarItem>
-              <Button variant="light" className="text-foreground">
-                Features
-              </Button>
-            </NavbarItem>
-            <NavbarItem>
-              <Button variant="light" className="text-foreground">
-                Pricing
-              </Button>
-            </NavbarItem>
-          </NavbarContent>
           <NavbarContent justify="end">
             {!isPending && session?.user ? (
               // Show logged in user with "Go to App" button
@@ -104,11 +87,11 @@ function RootComponent() {
           </NavbarContent>
         </Navbar>
       )}
-      <main>
+      <main className="flex-1 flex flex-col">
         <Outlet />
       </main>
       <TanStackRouterDevtools />
-    </>
+    </div>
   );
 }
 

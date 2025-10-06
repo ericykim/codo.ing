@@ -8,12 +8,13 @@ export const Route = createFileRoute("/")({
 
 function MarketingPage() {
   // Test public API endpoint
-  const { data: publicGreeting, isLoading: publicLoading } = trpc.test.publicHello.useQuery({
-    name: "Visitor",
-  });
+  const { data: publicGreeting, isLoading: publicLoading } =
+    trpc.test.publicHello.useQuery({
+      name: "Visitor",
+    });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="h-full bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
@@ -22,8 +23,8 @@ function MarketingPage() {
               Codo<span className="text-primary">.ing</span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              A cross-platform collaborative note-taking application built for developers.
-              Take notes, share ideas, and build knowledge together.
+              A cross-platform collaborative note-taking application built for
+              developers. Take notes, share ideas, and build knowledge together.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/signIn">
@@ -46,7 +47,8 @@ function MarketingPage() {
             Built for Modern Development
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Everything you need for collaborative note-taking, designed with developers in mind.
+            Everything you need for collaborative note-taking, designed with
+            developers in mind.
           </p>
         </div>
 
@@ -56,7 +58,7 @@ function MarketingPage() {
               <div className="text-primary text-2xl mb-4">🚀</div>
               <h3 className="text-xl font-semibold mb-3">Cross-Platform</h3>
               <p className="text-gray-600">
-                Access your notes from anywhere - web, desktop, or mobile. 
+                Access your notes from anywhere - web, desktop, or mobile.
                 Native apps for all your devices.
               </p>
             </CardBody>
@@ -65,7 +67,9 @@ function MarketingPage() {
           <Card className="p-6">
             <CardBody>
               <div className="text-primary text-2xl mb-4">👥</div>
-              <h3 className="text-xl font-semibold mb-3">Real-time Collaboration</h3>
+              <h3 className="text-xl font-semibold mb-3">
+                Real-time Collaboration
+              </h3>
               <p className="text-gray-600">
                 Work together in real-time. Share notes, collaborate on ideas,
                 and build knowledge as a team.
@@ -78,8 +82,8 @@ function MarketingPage() {
               <div className="text-primary text-2xl mb-4">📝</div>
               <h3 className="text-xl font-semibold mb-3">Rich Text Editor</h3>
               <p className="text-gray-600">
-                Powerful block-based editor with syntax highlighting,
-                code blocks, and markdown support.
+                Powerful block-based editor with syntax highlighting, code
+                blocks, and markdown support.
               </p>
             </CardBody>
           </Card>
@@ -145,7 +149,8 @@ function MarketingPage() {
             Ready to start taking better notes?
           </h2>
           <p className="text-lg text-gray-600 mb-8">
-            Join developers who are already using Codo.ing to organize their thoughts and collaborate effectively.
+            Join developers who are already using Codo.ing to organize their
+            thoughts and collaborate effectively.
           </p>
           <Link to="/signIn">
             <Button color="primary" size="lg" className="font-semibold">

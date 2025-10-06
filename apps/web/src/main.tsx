@@ -23,7 +23,7 @@ root.render(
   <StrictMode>
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <HeroUIProvider>
+        <HeroUIProvider className="h-full w-full">
           <RouterProvider router={router} />
         </HeroUIProvider>
       </QueryClientProvider>

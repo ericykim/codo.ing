@@ -49,7 +49,7 @@ export default function SignUp() {
   };
 
   return (
-    <Card className="max-w-md w-full">
+    <Card className="w-full">
       <CardHeader className="flex gap-3 justify-center">
         <div className="flex flex-col text-center">
           <p className="text-lg md:text-xl font-bold">Sign Up</p>
