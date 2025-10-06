@@ -1,15 +1,24 @@
 import { HeroUIProvider } from "@heroui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createRouter, RouterProvider } from "@tanstack/react-router";
+import {
+  createRouter,
+  RouterProvider,
+  createHashHistory,
+  createBrowserHistory,
+} from "@tanstack/react-router";
 import { StrictMode } from "react";
 import * as ReactDOM from "react-dom/client";
 import { trpc, trpcClient } from "./trpc";
 import { routeTree } from "./routeTree.gen";
 import "./styles.css";
-import "./router.d.ts";
 
+// Detect if running in Electron
+const isElectron = !!(typeof window !== "undefined" && window.electron);
+
+// Use hash routing for Electron, browser routing for web
 const router = createRouter({
   routeTree,
+  history: isElectron ? createHashHistory() : createBrowserHistory(),
 });
 
 // Create Query Client
