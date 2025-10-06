@@ -1,11 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button, Card, CardBody } from "@heroui/react";
+import { trpc } from "../trpc";
 
 export const Route = createFileRoute("/")({
   component: MarketingPage,
 });
 
 function MarketingPage() {
+  // Test public API endpoint
+  const { data: publicGreeting, isLoading: publicLoading } = trpc.test.publicHello.useQuery({
+    name: "Visitor",
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Hero Section */}
@@ -106,6 +112,29 @@ function MarketingPage() {
               <div className="text-gray-600 font-semibold">PostgreSQL</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* API Demo Section */}
+      <div className="bg-gray-50 py-16">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Live API Demo
+          </h2>
+          <p className="text-lg text-gray-600 mb-8">
+            Our API is working! Here's a live response from our public endpoint:
+          </p>
+          <Card className="max-w-md mx-auto">
+            <CardBody>
+              {publicLoading ? (
+                <p>Loading API response...</p>
+              ) : (
+                <p className="text-green-600 font-medium">
+                  {publicGreeting?.greeting || "API not available"}
+                </p>
+              )}
+            </CardBody>
+          </Card>
         </div>
       </div>
 

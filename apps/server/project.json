@@ -15,8 +15,12 @@
     "serve": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "bun --watch src/main.ts",
-        "cwd": "apps/server"
+        "commands": [
+          "nx run-many --target=build --projects=@codoing/schema,@codoing/db,trpc-server --parallel",
+          "bun --watch src/main.ts"
+        ],
+        "cwd": "apps/server",
+        "parallel": false
       }
     },
     "start": {

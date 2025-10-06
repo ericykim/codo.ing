@@ -9,4 +9,9 @@ export const trpcRouter = router({
 export type TRPCRouter = typeof trpcRouter;
 
 // Re-export tRPC utilities
-export { publicProcedure, router } from "./trpc";
+export {
+  privateProcedure,
+  publicProcedure,
+  router,
+  type TRPCContext,
+} from "./trpc";

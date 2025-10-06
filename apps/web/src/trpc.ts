@@ -12,12 +12,13 @@ export const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
       url: `${env.VITE_API_URL}/trpc`,
-      // You can add headers here if needed
-      // headers() {
-      //   return {
-      //     authorization: getAuthCookie(),
-      //   };
-      // },
+      // Enable credentials to include cookies in cross-origin requests
+      fetch(url, options) {
+        return fetch(url, {
+          ...options,
+          credentials: "include", // This ensures cookies are sent
+        });
+      },
     }),
   ],
 });
